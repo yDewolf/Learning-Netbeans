@@ -29,6 +29,7 @@ public class TelaClientes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane2 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -57,12 +58,17 @@ public class TelaClientes extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(400, 300));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(16, 64));
+
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 5));
 
         jLabel1.setText("ID:");
         jPanel2.add(jLabel1);
 
         txtId.setEditable(false);
+        txtId.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtId.setPreferredSize(new java.awt.Dimension(100, 22));
         jPanel2.add(txtId);
 
         jPanel1.add(jPanel2);
@@ -73,6 +79,8 @@ public class TelaClientes extends javax.swing.JFrame {
         jPanel3.add(jLabel2);
 
         txtNome.setEditable(false);
+        txtNome.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtNome.setPreferredSize(new java.awt.Dimension(100, 22));
         jPanel3.add(txtNome);
 
         jPanel1.add(jPanel3);
@@ -83,6 +91,8 @@ public class TelaClientes extends javax.swing.JFrame {
         jPanel4.add(jLabel3);
 
         txtEmail.setEditable(false);
+        txtEmail.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtEmail.setPreferredSize(new java.awt.Dimension(100, 22));
         jPanel4.add(txtEmail);
 
         jPanel1.add(jPanel4);
@@ -93,11 +103,15 @@ public class TelaClientes extends javax.swing.JFrame {
         jPanel5.add(jLabel4);
 
         txtTelefone.setEditable(false);
+        txtTelefone.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtTelefone.setPreferredSize(new java.awt.Dimension(100, 22));
         jPanel5.add(txtTelefone);
 
         jPanel1.add(jPanel5);
 
-        getContentPane().add(jPanel1);
+        jScrollPane2.setViewportView(jPanel1);
+
+        getContentPane().add(jScrollPane2);
 
         jLabel5.setText("Pesquisar:");
         jPanel7.add(jLabel5);
@@ -199,6 +213,7 @@ public class TelaClientes extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblClientes;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtId;
