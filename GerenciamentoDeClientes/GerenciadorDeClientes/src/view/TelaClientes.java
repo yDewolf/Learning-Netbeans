@@ -4,6 +4,9 @@
  */
 package view;
 
+import dao.ClienteDAO;
+import model.Cliente;
+
 /**
  *
  * @author Etec
@@ -78,7 +81,6 @@ public class TelaClientes extends javax.swing.JFrame {
         jLabel2.setText("Nome:");
         jPanel3.add(jLabel2);
 
-        txtNome.setEditable(false);
         txtNome.setMinimumSize(new java.awt.Dimension(100, 22));
         txtNome.setPreferredSize(new java.awt.Dimension(100, 22));
         jPanel3.add(txtNome);
@@ -90,7 +92,6 @@ public class TelaClientes extends javax.swing.JFrame {
         jLabel3.setText("Email:");
         jPanel4.add(jLabel3);
 
-        txtEmail.setEditable(false);
         txtEmail.setMinimumSize(new java.awt.Dimension(100, 22));
         txtEmail.setPreferredSize(new java.awt.Dimension(100, 22));
         jPanel4.add(txtEmail);
@@ -102,7 +103,6 @@ public class TelaClientes extends javax.swing.JFrame {
         jLabel4.setText("Telefone:");
         jPanel5.add(jLabel4);
 
-        txtTelefone.setEditable(false);
         txtTelefone.setMinimumSize(new java.awt.Dimension(100, 22));
         txtTelefone.setPreferredSize(new java.awt.Dimension(100, 22));
         jPanel5.add(txtTelefone);
@@ -135,6 +135,11 @@ public class TelaClientes extends javax.swing.JFrame {
         jPanel8.add(btnNovo);
 
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
         jPanel8.add(btnSalvar);
 
         btnExcluir.setText("Excluir");
@@ -169,6 +174,29 @@ public class TelaClientes extends javax.swing.JFrame {
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        // 1. Coletar os dados da tela
+        String nome = txtNome.getText();
+        String email = txtEmail.getText();
+        String telefone = txtTelefone.getText();
+
+        // 2. Criar um objeto Cliente com os dados
+        Cliente cliente = new Cliente();
+        cliente.setNome(nome);
+        cliente.setEmail(email);
+        cliente.setTelefone(telefone);
+
+        // 3. Criar um objeto ClienteDAO para salvar o cliente
+        ClienteDAO clienteDAO = new ClienteDAO();
+        clienteDAO.salvar(cliente);
+
+        // 4. Limpar os campos após salvar
+        txtNome.setText("");
+        txtEmail.setText("");
+        txtTelefone.setText("");
+ 
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     /**
      * @param args the command line arguments
