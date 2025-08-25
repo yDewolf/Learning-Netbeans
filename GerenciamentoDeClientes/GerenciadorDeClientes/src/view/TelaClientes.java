@@ -6,6 +6,7 @@ package view;
 
 import dao.ClienteDAO;
 import model.Cliente;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,7 +21,9 @@ public class TelaClientes extends javax.swing.JFrame {
      */
     public TelaClientes() {
         initComponents();
+
         setLocationRelativeTo(null);
+        carregarTabela();
     }
 
     /**
@@ -195,7 +198,8 @@ public class TelaClientes extends javax.swing.JFrame {
         txtNome.setText("");
         txtEmail.setText("");
         txtTelefone.setText("");
- 
+        
+        this.carregarTabela();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     /**
@@ -222,7 +226,27 @@ public class TelaClientes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new TelaClientes().setVisible(true));
     }
+    
+    public void carregarTabela() {
+        // Pega o modelo da tabela que foi definido na interface gráfica
+        DefaultTableModel modelo = (DefaultTableModel) tblClientes.getModel();
+        // Limpa a tabela para evitar duplicidade de dados ao recarregar
+        modelo.setNumRows(0);
 
+        ClienteDAO clienteDAO = new ClienteDAO();
+
+        // Pega a lista de clientes do banco de dados
+        for (Cliente c : clienteDAO.listar()) {
+            // Adiciona uma nova linha na tabela para cada cliente da lista
+            modelo.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEmail(),
+                c.getTelefone()
+            });
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnNovo;
