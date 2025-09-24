@@ -61,6 +61,7 @@ public class TelaClientes extends javax.swing.JFrame {
         tblClientes = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(800, 200));
         setPreferredSize(new java.awt.Dimension(400, 300));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
@@ -125,6 +126,11 @@ public class TelaClientes extends javax.swing.JFrame {
                 txtPesquisaActionPerformed(evt);
             }
         });
+        txtPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPesquisaKeyReleased(evt);
+            }
+        });
         jPanel7.add(txtPesquisa);
 
         jPanel6.add(jPanel7);
@@ -146,6 +152,11 @@ public class TelaClientes extends javax.swing.JFrame {
         jPanel8.add(btnSalvar);
 
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
         jPanel8.add(btnExcluir);
 
         jPanel6.add(jPanel8);
@@ -163,6 +174,11 @@ public class TelaClientes extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblClientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblClientes);
 
         getContentPane().add(jScrollPane1);
@@ -179,28 +195,64 @@ public class TelaClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // 1. Coletar os dados da tela
-        String nome = txtNome.getText();
-        String email = txtEmail.getText();
-        String telefone = txtTelefone.getText();
-
-        // 2. Criar um objeto Cliente com os dados
         Cliente cliente = new Cliente();
-        cliente.setNome(nome);
-        cliente.setEmail(email);
-        cliente.setTelefone(telefone);
-
-        // 3. Criar um objeto ClienteDAO para salvar o cliente
         ClienteDAO clienteDAO = new ClienteDAO();
-        clienteDAO.salvar(cliente);
-
-        // 4. Limpar os campos após salvar
+        cliente.setNome(txtNome.getText());
+        cliente.setEmail(txtEmail.getText());
+        cliente.setTelefone(txtTelefone.getText());
+        
+        if (!txtId.getText().isEmpty()) {
+            cliente.setId(Integer.parseInt(txtId.getText()));
+            clienteDAO.atualizar(cliente);
+            
+        } else {
+            clienteDAO.salvar(cliente);
+        }
+        
+        txtId.setText("");
         txtNome.setText("");
         txtEmail.setText("");
         txtTelefone.setText("");
-        
-        this.carregarTabela();
+        carregarTabela();
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
+        int linhaSelecionada = tblClientes.getSelectedRow();
+
+        txtId.setText(tblClientes.getValueAt(linhaSelecionada, 0).toString());
+        txtNome.setText(tblClientes.getValueAt(linhaSelecionada, 1).toString());
+        txtEmail.setText(tblClientes.getValueAt(linhaSelecionada, 2).toString());
+        txtTelefone.setText(tblClientes.getValueAt(linhaSelecionada, 3).toString());
+    }//GEN-LAST:event_tblClientesMouseClicked
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int id = Integer.parseInt(txtId.getText());
+        ClienteDAO clienteDAO = new ClienteDAO();
+        clienteDAO.excluir(id);
+        
+        txtId.setText("");
+        txtNome.setText("");
+        txtEmail.setText("");
+        txtTelefone.setText("");
+        carregarTabela();
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void txtPesquisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaKeyReleased
+        String nome = txtPesquisa.getText();
+        DefaultTableModel modelo = (DefaultTableModel) tblClientes.getModel();
+        
+        modelo.setNumRows(0);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        
+        for (Cliente c : clienteDAO.buscarPorNome(nome)) {
+            modelo.addRow(new Object[]{
+            c.getId(),
+            c.getNome(),
+            c.getEmail(),
+            c.getTelefone()
+            });
+        }
+    }//GEN-LAST:event_txtPesquisaKeyReleased
 
     /**
      * @param args the command line arguments
