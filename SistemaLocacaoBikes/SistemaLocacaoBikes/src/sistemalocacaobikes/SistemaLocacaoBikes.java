@@ -5,6 +5,7 @@
 package sistemalocacaobikes;
 
 import sistemalocacaobikes.dao.ConnectionFactory;
+import view.TelaClientes;
 
 
 public class SistemaLocacaoBikes {
