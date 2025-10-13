@@ -18,9 +18,9 @@ public class LocacaoDAO {
             stmt.setInt(1, l.getClienteId());
             stmt.setInt(2, l.getBicicletaId());
             stmt.setTimestamp(3, new
-            java.sql.Timestamp(l.getDataInicio().getTime()));
+                java.sql.Timestamp(l.getDataInicio().getTime()));
             stmt.setTimestamp(4, new
-            java.sql.Timestamp(l.getDataFim().getTime()));
+                java.sql.Timestamp(l.getDataFim().getTime()));
             stmt.executeUpdate();
 
             String sqlAtualiza = "UPDATE bicicleta SET status='locada' WHERE id=?";

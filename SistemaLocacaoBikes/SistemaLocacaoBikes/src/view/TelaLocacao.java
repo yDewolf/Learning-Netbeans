@@ -4,6 +4,16 @@
  */
 package view;
 
+import dao.BicicletaDAO;
+import dao.ClienteDAO;
+import dao.LocacaoDAO;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import model.Bicicleta;
+import model.Cliente;
+import model.Locacao;
+
 /**
  *
  * @author Etec
@@ -17,6 +27,8 @@ public class TelaLocacao extends javax.swing.JFrame {
      */
     public TelaLocacao() {
         initComponents();
+        
+        refresh();
     }
 
     /**
@@ -28,22 +40,128 @@ public class TelaLocacao extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cbClientes = new javax.swing.JComboBox<>();
+        cbBicicletasDisponiveis = new javax.swing.JComboBox<>();
+        btnAlugar = new javax.swing.JButton();
+        btnDevolver = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabelaLocacoes = new javax.swing.JTable();
+        btnRefresh = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        cbClientes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        cbBicicletasDisponiveis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnAlugar.setText("Alugar");
+        btnAlugar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlugarActionPerformed(evt);
+            }
+        });
+
+        btnDevolver.setText("Devolver");
+
+        tabelaLocacoes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "id", "idCliente", "idBicicleta", "dataInicio", "dataFim", "status"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tabelaLocacoes);
+
+        btnRefresh.setText("Atualizar");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAlugar)
+                    .addComponent(cbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbBicicletasDisponiveis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnDevolver)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRefresh)))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbBicicletasDisponiveis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAlugar)
+                    .addComponent(btnDevolver)
+                    .addComponent(btnRefresh))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 35, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAlugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlugarActionPerformed
+        Locacao locacao = new Locacao();
+        locacao.setClienteId(Integer.parseInt(cbClientes.getSelectedItem().toString()));
+        locacao.setBicicletaId(Integer.parseInt(cbBicicletasDisponiveis.getSelectedItem().toString()));
+        
+        LocacaoDAO dao = new LocacaoDAO();
+        dao.alugar(locacao);
+    }//GEN-LAST:event_btnAlugarActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        refresh();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void refresh() {
+        cbBicicletasDisponiveis.removeAllItems();
+        BicicletaDAO bikeDao = new BicicletaDAO();
+        List<Bicicleta> bikes = bikeDao.read();
+        for (Bicicleta bike : bikes) {
+            if (bike.getStatus().toLowerCase().equals("disponível")) {
+                cbBicicletasDisponiveis.addItem(""+bike.getId());
+            }
+        }
+        
+        cbClientes.removeAllItems();
+        ClienteDAO clienteDao = new ClienteDAO();
+        List<Cliente> clientes = clienteDao.read();
+        for (Cliente cliente : clientes) {
+            cbClientes.addItem(""+cliente.getId());
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -70,5 +188,12 @@ public class TelaLocacao extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAlugar;
+    private javax.swing.JButton btnDevolver;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JComboBox<String> cbBicicletasDisponiveis;
+    private javax.swing.JComboBox<String> cbClientes;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabelaLocacoes;
     // End of variables declaration//GEN-END:variables
 }

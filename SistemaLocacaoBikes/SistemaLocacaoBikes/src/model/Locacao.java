@@ -12,7 +12,7 @@ public class Locacao {
     private int bicicletaId;
     private Date dataInicio;
     private Date dataFim;
-    private String status;
+    private String status; // ativa, finalizada
     // Getters e Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
