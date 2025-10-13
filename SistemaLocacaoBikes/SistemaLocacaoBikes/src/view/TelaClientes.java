@@ -7,7 +7,7 @@ package view;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
-import sistemalocacaobikes.dao.ClienteDAO;
+import dao.ClienteDAO;
 
 /**
  *

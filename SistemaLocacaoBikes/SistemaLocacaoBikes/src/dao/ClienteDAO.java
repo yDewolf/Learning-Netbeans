@@ -1,4 +1,4 @@
-package sistemalocacaobikes.dao;
+package dao;
 
 import java.sql.*;
 import java.util.ArrayList;
