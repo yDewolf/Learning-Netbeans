@@ -4,10 +4,16 @@
  */
 package view;
 
+import dao.BicicletaDAO;
+import dao.ClienteDAO;
 import dao.LocacaoDAO;
+import dao.ManutencaoDAO;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import model.Bicicleta;
+import model.Cliente;
 import model.Locacao;
+import model.Manutencao;
 
 /**
  *
@@ -95,17 +101,72 @@ public class TelaRelatorios extends javax.swing.JFrame {
     public void gerarRelatorio(String tipo) {
         switch(tipo) {
             case "Clientes":
-                // listarClientes();
+                listarClientes();
                 break;
             case "Bicicletas":
-                // listarBicicletas();
+                listarBicicletas();
                 break;
             case "Locações":
                 listarLocacoes();
                 break;
             case "Manutenções":
-                // listarManutencoes();
+                listarManutencoes();
                 break;
+        }
+    }
+    
+    public void listarManutencoes() {
+        List<Manutencao> lista = new ManutencaoDAO().read();
+        DefaultTableModel modelo = (DefaultTableModel) tabelaRelatorios.getModel();
+        modelo.setColumnCount(0);
+        
+        modelo.addColumn("idManutencao");
+        modelo.addColumn("idBicicleta");
+        modelo.addColumn("descricao");
+        modelo.addColumn("data");
+        modelo.setRowCount(0);
+        for (Manutencao manutencao : lista) {
+            modelo.addRow(new Object[]{
+                manutencao.getId(), manutencao.getBicicletaId(), 
+                manutencao.getDescricao(), manutencao.getData()
+            });
+        }
+    }
+
+    public void listarBicicletas() {
+        List<Bicicleta> lista = new BicicletaDAO().read();
+        DefaultTableModel modelo = (DefaultTableModel) tabelaRelatorios.getModel();
+        modelo.setColumnCount(0);
+        
+        modelo.addColumn("idBicicleta");
+        modelo.addColumn("codigo");
+        modelo.addColumn("status");
+        modelo.setRowCount(0);
+        for (Bicicleta bike : lista) {
+            modelo.addRow(new Object[]{
+                bike.getId(), bike.getCodigo(), 
+                bike.getStatus()
+            });
+        }
+    }
+
+    public void listarClientes() {
+        List<Cliente> lista = new ClienteDAO().read();
+        DefaultTableModel modelo = (DefaultTableModel) tabelaRelatorios.getModel();
+        modelo.setColumnCount(0);
+        
+        modelo.addColumn("idCliente");
+        modelo.addColumn("nome");
+        modelo.addColumn("cpf");
+        modelo.addColumn("email");
+        modelo.addColumn("telefone");
+        modelo.setRowCount(0);
+        for (Cliente cliente : lista) {
+            modelo.addRow(new Object[]{
+                cliente.getId(), cliente.getNome(), 
+                cliente.getCpf(), cliente.getEmail(), 
+                cliente.getTelefone()
+            });
         }
     }
     
