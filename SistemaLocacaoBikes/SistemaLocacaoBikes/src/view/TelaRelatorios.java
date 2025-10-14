@@ -89,7 +89,7 @@ public class TelaRelatorios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarActionPerformed
-        
+        gerarRelatorio(cbTipoRelatorio.getSelectedItem().toString());
     }//GEN-LAST:event_btnGerarActionPerformed
 
     public void gerarRelatorio(String tipo) {
@@ -111,8 +111,15 @@ public class TelaRelatorios extends javax.swing.JFrame {
     
     public void listarLocacoes() {
         List<Locacao> lista = new LocacaoDAO().read();
-        DefaultTableModel modelo = (DefaultTableModel)
-        tabelaRelatorios.getModel();
+        DefaultTableModel modelo = (DefaultTableModel) tabelaRelatorios.getModel();
+        modelo.setColumnCount(0);
+        
+        modelo.addColumn("idLocacao");
+        modelo.addColumn("idCliente");
+        modelo.addColumn("idBicicleta");
+        modelo.addColumn("dataInicio");
+        modelo.addColumn("dataFim");
+        modelo.addColumn("dataStatus");
         modelo.setRowCount(0);
         for (Locacao l : lista) {
             modelo.addRow(new Object[]{

@@ -7,9 +7,14 @@ package view;
 import dao.BicicletaDAO;
 import dao.ClienteDAO;
 import dao.LocacaoDAO;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
 import model.Bicicleta;
 import model.Cliente;
 import model.Locacao;
@@ -47,6 +52,7 @@ public class TelaLocacao extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaLocacoes = new javax.swing.JTable();
         btnRefresh = new javax.swing.JButton();
+        txtDataFim = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,6 +97,8 @@ public class TelaLocacao extends javax.swing.JFrame {
             }
         });
 
+        txtDataFim.setText("data fim");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,12 +109,15 @@ public class TelaLocacao extends javax.swing.JFrame {
                     .addComponent(cbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbBicicletasDisponiveis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cbBicicletasDisponiveis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnDevolver)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRefresh)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 87, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -117,7 +128,8 @@ public class TelaLocacao extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbBicicletasDisponiveis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbBicicletasDisponiveis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAlugar)
@@ -133,8 +145,20 @@ public class TelaLocacao extends javax.swing.JFrame {
 
     private void btnAlugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlugarActionPerformed
         Locacao locacao = new Locacao();
-        locacao.setClienteId(Integer.parseInt(cbClientes.getSelectedItem().toString()));
-        locacao.setBicicletaId(Integer.parseInt(cbBicicletasDisponiveis.getSelectedItem().toString()));
+        String clienteKey = cbClientes.getSelectedItem().toString();
+        String[] clienteSplit = clienteKey.split(" ");
+        locacao.setClienteId(Integer.parseInt(clienteSplit[clienteSplit.length - 1]));
+        
+        String bikeKey = cbBicicletasDisponiveis.getSelectedItem().toString();
+        String[] bikeSplit = bikeKey.split(" ");
+        
+        locacao.setBicicletaId(Integer.parseInt(bikeSplit[bikeSplit.length - 1]));
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            locacao.setDataFim(formatter.parse(txtDataFim.getText()));
+        } catch (ParseException ex) {
+            System.getLogger(TelaLocacao.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
         
         LocacaoDAO dao = new LocacaoDAO();
         dao.alugar(locacao);
@@ -150,7 +174,7 @@ public class TelaLocacao extends javax.swing.JFrame {
         List<Bicicleta> bikes = bikeDao.read();
         for (Bicicleta bike : bikes) {
             if (bike.getStatus().toLowerCase().equals("disponível")) {
-                cbBicicletasDisponiveis.addItem(""+bike.getId());
+                cbBicicletasDisponiveis.addItem(bike.getCodigo()+" "+bike.getId());
             }
         }
         
@@ -158,7 +182,19 @@ public class TelaLocacao extends javax.swing.JFrame {
         ClienteDAO clienteDao = new ClienteDAO();
         List<Cliente> clientes = clienteDao.read();
         for (Cliente cliente : clientes) {
-            cbClientes.addItem(""+cliente.getId());
+            cbClientes.addItem(cliente.getCpf()+" "+cliente.getId());
+        }
+        
+        List<Locacao> lista = new LocacaoDAO().read();
+        DefaultTableModel modelo = (DefaultTableModel) tabelaLocacoes.getModel();
+
+        modelo.setRowCount(0);
+        for (Locacao l : lista) {
+            modelo.addRow(new Object[]{
+                l.getId(), l.getClienteId(),
+                l.getBicicletaId(), l.getDataInicio(), 
+                l.getDataFim(), l.getStatus()
+            });
         }
     }
     
@@ -195,5 +231,6 @@ public class TelaLocacao extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbClientes;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabelaLocacoes;
+    private javax.swing.JTextField txtDataFim;
     // End of variables declaration//GEN-END:variables
 }

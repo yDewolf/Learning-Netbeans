@@ -5,6 +5,7 @@
 package dao;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import model.Locacao;
@@ -17,10 +18,17 @@ public class LocacaoDAO {
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, l.getClienteId());
             stmt.setInt(2, l.getBicicletaId());
-            stmt.setTimestamp(3, new
-                java.sql.Timestamp(l.getDataInicio().getTime()));
-            stmt.setTimestamp(4, new
-                java.sql.Timestamp(l.getDataFim().getTime()));
+            
+            java.util.Date init_date = l.getDataInicio();
+            java.sql.Timestamp init_timestamp = new java.sql.Timestamp(Instant.now().toEpochMilli());
+            if (init_date != null) {
+                init_timestamp = new java.sql.Timestamp(init_date.getTime());
+            }
+            stmt.setTimestamp(3,init_timestamp);
+            
+            java.util.Date finish_date = l.getDataFim();
+            java.sql.Timestamp finish_timestamp = new java.sql.Timestamp(finish_date.getTime());
+            stmt.setTimestamp(4, finish_timestamp);
             stmt.executeUpdate();
 
             String sqlAtualiza = "UPDATE bicicleta SET status='locada' WHERE id=?";
