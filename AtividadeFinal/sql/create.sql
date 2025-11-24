@@ -1,0 +1,50 @@
+DROP DATABASE AnimeList;
+CREATE DATABASE AnimeList;
+USE AnimeList;
+
+CREATE TABLE Users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(32) NOT NULL,
+    password VARCHAR(127) NOT NULL
+);
+
+CREATE TABLE Animes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE Tags (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    tag_name VARCHAR(32) NOT NULL UNIQUE
+);
+
+CREATE TABLE Anime_Tags (
+    anime_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    FOREIGN KEY (anime_id) REFERENCES Animes(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Anime_Ratings (
+    user_id INT,
+    anime_id INT NOT NULL,
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 10),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (anime_id) REFERENCES Animes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE User_AnimeList (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    list_name VARCHAR(32) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE User_AnimeList_Anime (
+    list_id INT NOT NULL,
+    anime_id INT NOT NULL,
+    position INT NOT NULL DEFAULT -1,
+    FOREIGN KEY (list_id) REFERENCES User_AnimeList(id) ON DELETE CASCADE,
+    FOREIGN KEY (anime_id) REFERENCES Animes(id) ON DELETE CASCADE
+);
