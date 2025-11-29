@@ -5,8 +5,16 @@
 package view;
 
 import dao.AnimeDAO;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import model.Anime;
@@ -45,6 +53,8 @@ public class MainPage extends javax.swing.JFrame {
         animeList = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(300, 300));
+        setPreferredSize(new java.awt.Dimension(400, 500));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
         navbar.setMaximumSize(new java.awt.Dimension(32767, 30));
@@ -83,17 +93,41 @@ public class MainPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profileButtonActionPerformed
 
     private void manageAnimesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageAnimesButtonActionPerformed
-        ManageAnimesPage manage_screen = new ManageAnimesPage();
+        ManageAnimesPage manage_screen = new ManageAnimesPage(this);
         manage_screen.setVisible(true);
     }//GEN-LAST:event_manageAnimesButtonActionPerformed
 
+    public void lookIntoAnime(Anime anime) {
+        System.out.println("Oi eu cliquei no anime: " + anime.getId());
+    }
+    
     public void updateAnimeList() {
         AnimeDAO anime_dao = new AnimeDAO();
+        this.animeList.removeAll();
         List<Anime> animes = anime_dao.list();
         for (Anime anime : animes) {
-            JLabel name_label = new JLabel(anime.getName());
+            JPanel anime_info_holder = new JPanel();
+            anime_info_holder.setLayout(new BoxLayout(anime_info_holder, BoxLayout.X_AXIS));
+            anime_info_holder.setMaximumSize(new Dimension(1920, 30));
             
-            this.animeList.add(name_label);
+            JPanel label_holder = new JPanel();
+            label_holder.setLayout(new FlowLayout(FlowLayout.LEFT));
+            JLabel name_label = new JLabel(anime.getName());
+            label_holder.add(name_label);
+            
+            JPanel button_holder = new JPanel();
+            button_holder.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            JButton look_into = new JButton("Ver");
+            look_into.addActionListener((ActionEvent e) -> {
+                lookIntoAnime(anime);
+            });
+            
+            button_holder.add(look_into);
+            
+            anime_info_holder.add(label_holder);
+            anime_info_holder.add(new JPanel());
+            anime_info_holder.add(button_holder);
+            this.animeList.add(anime_info_holder);
         }
     }
     

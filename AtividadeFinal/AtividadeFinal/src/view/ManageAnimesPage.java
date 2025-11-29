@@ -15,13 +15,16 @@ import model.Anime;
  */
 public class ManageAnimesPage extends javax.swing.JFrame {
     protected int selected_id;
+    protected MainPage main_screen;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManageAnimesPage.class.getName());
 
     /**
      * Creates new form ManageAnimes
+     * @param main_screen
      */
-    public ManageAnimesPage() {
-        initComponents();        
+    public ManageAnimesPage(MainPage main_screen) {
+        initComponents();
+        this.main_screen = main_screen;
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.updateTable();
     }
@@ -123,12 +126,6 @@ public class ManageAnimesPage extends javax.swing.JFrame {
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.Y_AXIS));
 
-        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jScrollPane1MouseClicked(evt);
-            }
-        });
-
         animeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -153,6 +150,11 @@ public class ManageAnimesPage extends javax.swing.JFrame {
             }
         });
         animeTable.getTableHeader().setReorderingAllowed(false);
+        animeTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                animeTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(animeTable);
 
         jPanel4.add(jScrollPane1);
@@ -165,11 +167,20 @@ public class ManageAnimesPage extends javax.swing.JFrame {
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         AnimeDAO dao = new AnimeDAO();
         Anime anime = new Anime(
-                -1,
+                this.selected_id,
                 this.nameField.getText(),
                 this.descriptionArea.getText()
         );
-        dao.create(anime);
+        
+        if (this.selected_id == -1) {
+            dao.create(anime);
+        } else {
+            dao.update(anime);
+            this.selected_id = -1;
+            this.submitButton.setText("Inserir");
+            this.idField.setText("");
+        }
+        
         this.updateTable();
     }//GEN-LAST:event_submitButtonActionPerformed
 
@@ -177,17 +188,21 @@ public class ManageAnimesPage extends javax.swing.JFrame {
         updateTable();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
-    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+    private void animeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_animeTableMouseClicked
         int selected_line = this.animeTable.getSelectedRow();
+        if (selected_line == -1) {
+            return;
+        }
         
         this.selected_id = (int) this.animeTable.getValueAt(selected_line, 0);
         this.idField.setText("" + this.selected_id);
         this.submitButton.setText("Editar");
         this.nameField.setText(this.animeTable.getValueAt(selected_line, 1).toString());
         this.descriptionArea.setText(this.animeTable.getValueAt(selected_line, 2).toString());
-    }//GEN-LAST:event_jScrollPane1MouseClicked
+    }//GEN-LAST:event_animeTableMouseClicked
     
     public void updateTable() {
+        this.main_screen.updateAnimeList();
         AnimeDAO dao = new AnimeDAO();
         DefaultTableModel model = (DefaultTableModel) this.animeTable.getModel();
         model.setRowCount(0);
@@ -202,30 +217,6 @@ public class ManageAnimesPage extends javax.swing.JFrame {
         }
     }
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ManageAnimesPage().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable animeTable;
