@@ -108,6 +108,7 @@ public class LoginPage extends javax.swing.JFrame {
         System.out.println("Usuário logado com sucesso | id: " + target_user.getId());
         this.loggedUser = target_user;
         mainScreen.loggedUser = this.loggedUser;
+        this.mainScreen.updateTabs();
         this.dispose();
     }//GEN-LAST:event_loginButtonActionPerformed
 
@@ -130,6 +131,7 @@ public class LoginPage extends javax.swing.JFrame {
         this.loggedUser = dao.get_user(usernameField.getText());
         System.out.println("Usuário criado com sucesso | id: " + this.loggedUser.getId());
         mainScreen.loggedUser = this.loggedUser;
+        this.mainScreen.updateTabs();
         this.dispose();
     }//GEN-LAST:event_signupButtonActionPerformed
 

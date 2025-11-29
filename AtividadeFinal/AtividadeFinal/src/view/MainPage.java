@@ -35,6 +35,7 @@ public class MainPage extends javax.swing.JFrame {
     public MainPage() {
         initComponents();
         updateAnimeList();
+        updateTabs();
     }
 
     /**
@@ -48,6 +49,7 @@ public class MainPage extends javax.swing.JFrame {
 
         navbar = new javax.swing.JPanel();
         profileButton = new javax.swing.JButton();
+        myListsButton = new javax.swing.JButton();
         manageAnimesButton = new javax.swing.JButton();
         animeScroll = new javax.swing.JScrollPane();
         animeList = new javax.swing.JPanel();
@@ -68,6 +70,14 @@ public class MainPage extends javax.swing.JFrame {
             }
         });
         navbar.add(profileButton);
+
+        myListsButton.setText("Minhas Listas");
+        myListsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myListsButtonActionPerformed(evt);
+            }
+        });
+        navbar.add(myListsButton);
 
         manageAnimesButton.setText("Gerenciar Animes");
         manageAnimesButton.addActionListener(new java.awt.event.ActionListener() {
@@ -96,6 +106,10 @@ public class MainPage extends javax.swing.JFrame {
         ManageAnimesPage manage_screen = new ManageAnimesPage(this);
         manage_screen.setVisible(true);
     }//GEN-LAST:event_manageAnimesButtonActionPerformed
+
+    private void myListsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myListsButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_myListsButtonActionPerformed
 
     public void lookIntoAnime(Anime anime) {
         System.out.println("Oi eu cliquei no anime: " + anime.getId());
@@ -131,6 +145,12 @@ public class MainPage extends javax.swing.JFrame {
         }
     }
     
+    public void updateTabs() {
+        this.manageAnimesButton.setVisible(this.loggedUser != null);
+        this.animeScroll.setVisible(this.loggedUser != null);
+        this.myListsButton.setVisible(this.loggedUser != null);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -151,6 +171,7 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JPanel animeList;
     private javax.swing.JScrollPane animeScroll;
     private javax.swing.JButton manageAnimesButton;
+    private javax.swing.JButton myListsButton;
     private javax.swing.JPanel navbar;
     private javax.swing.JButton profileButton;
     // End of variables declaration//GEN-END:variables

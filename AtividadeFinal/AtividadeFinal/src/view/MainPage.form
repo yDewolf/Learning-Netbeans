@@ -53,6 +53,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profileButtonActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="myListsButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Minhas Listas"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="myListsButtonActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JButton" name="manageAnimesButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Gerenciar Animes"/>
