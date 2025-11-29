@@ -57,7 +57,7 @@ public class UserDAO {
             );
             
             if (!username_query.equals("")) {
-                stmt.setString(0, username_query);
+                stmt.setString(1, username_query);
             }
             
             ResultSet result = ConnectionFactory.execute_fetch_statement(con, stmt);
@@ -81,7 +81,12 @@ public class UserDAO {
     }
 
     public User get_user(String username) {
-        return this.list(username).getLast();
+        List<User> users = this.list(username);
+        if (users.isEmpty()) {
+            return null;
+        }
+        
+        return users.getLast();
     }
     
     public void delete(User user) {
