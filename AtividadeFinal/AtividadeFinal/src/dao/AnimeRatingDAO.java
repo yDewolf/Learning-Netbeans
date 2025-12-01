@@ -65,4 +65,26 @@ public class AnimeRatingDAO {
 
         return -1;
     }
+
+    public float get_average_anime_rating(Anime anime) {
+        try {
+            Connection con = ConnectionFactory.getConnection();
+            String sql =  "SELECT AVG(rating) FROM Anime_Ratings WHERE anime_id = ?";
+            PreparedStatement stmt = con.prepareStatement(
+                sql
+            );
+
+            stmt.setInt(1, anime.getId());
+
+            ResultSet result = ConnectionFactory.execute_fetch_statement(con, stmt);
+            while (result.next()) {
+                return result.getFloat("AVG(rating)");
+            }
+            ConnectionFactory.closeConnection(con, stmt, result);
+        } catch (SQLException ex) {
+            System.getLogger(AnimeDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
+        return -1;
+    }
 }

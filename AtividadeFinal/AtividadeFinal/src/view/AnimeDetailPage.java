@@ -24,10 +24,12 @@ public class AnimeDetailPage extends javax.swing.JFrame {
     protected Anime source_anime;
     protected MainPage main_page;
     protected List<JButton> rating_buttons = new ArrayList<JButton>();
+    protected Boolean already_rated = false;
 
     public AnimeDetailPage(MainPage main, Anime source_anime) {
         this.main_page = main;
         this.source_anime = source_anime;
+        this.already_rated = false;
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.updateElements(this.source_anime);
@@ -38,8 +40,7 @@ public class AnimeDetailPage extends javax.swing.JFrame {
         this.animeRatingHold.removeAll();
         AnimeRatingDAO dao = new AnimeRatingDAO();
         int rating = dao.get_anime_rating(source_anime, this.main_page.loggedUser);
-        System.out.println("Rating: " + rating);
-        
+        already_rated = rating != -1;
         for (int idx = 1; idx <= 5; idx++) {
             JButton button = new JButton();
             button.setMinimumSize(new Dimension(32, 32));
@@ -52,8 +53,9 @@ public class AnimeDetailPage extends javax.swing.JFrame {
             
             int this_rating = idx;
             button.addActionListener((ActionEvent e) -> {
-                if (rating == -1) {
+                if (!already_rated) {
                     dao.add_rating_to_anime(source_anime, this.main_page.loggedUser, this_rating);
+                    already_rated = true;
                 } else {
                     dao.update_anime_rating(source_anime, this.main_page.loggedUser, this_rating);
                 }
@@ -63,11 +65,13 @@ public class AnimeDetailPage extends javax.swing.JFrame {
             this.rating_buttons.add(button);
             this.animeRatingHold.add(button);
         }
+        
+        updateRatingButtons();
     }
     public void updateRatingButtons() {
         AnimeRatingDAO dao = new AnimeRatingDAO();
         int rating = dao.get_anime_rating(source_anime, this.main_page.loggedUser);
-        System.out.println("Rating: " + rating);
+        this.avgRating.setText(String.format("%.2f", dao.get_average_anime_rating(source_anime)));
         for (int idx = 1; idx <= 5; idx++) {
             JButton button = this.rating_buttons.get(idx - 1);
             if (rating < idx) {
@@ -99,6 +103,7 @@ public class AnimeDetailPage extends javax.swing.JFrame {
         animeSRating2 = new javax.swing.JButton();
         animeSRating3 = new javax.swing.JButton();
         animeSRating4 = new javax.swing.JButton();
+        avgRating = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         listComboBox = new javax.swing.JComboBox<>();
         addToListButton = new javax.swing.JButton();
@@ -147,6 +152,10 @@ public class AnimeDetailPage extends javax.swing.JFrame {
         animeRatingHold.add(animeSRating4);
 
         jPanel2.add(animeRatingHold);
+
+        avgRating.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        avgRating.setText("5.0");
+        jPanel2.add(avgRating);
 
         listComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lista 1", "Lista 2" }));
         jPanel3.add(listComboBox);
@@ -199,6 +208,7 @@ public class AnimeDetailPage extends javax.swing.JFrame {
     private javax.swing.JButton animeSRating2;
     private javax.swing.JButton animeSRating3;
     private javax.swing.JButton animeSRating4;
+    private javax.swing.JLabel avgRating;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
