@@ -44,7 +44,7 @@ public class UserDAO {
     }
 
     protected List<User> list(String username_query) {
-        List<User> users = new ArrayList();
+        List<User> users = new ArrayList<User>();
         try {
             Connection con = ConnectionFactory.getConnection();
             String sql =  "SELECT * FROM Users";

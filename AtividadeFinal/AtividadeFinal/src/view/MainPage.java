@@ -26,7 +26,7 @@ import model.User;
  */
 public class MainPage extends javax.swing.JFrame {
     protected User loggedUser;
-    
+    protected AnimeDetailPage anime_detail_page;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainPage.class.getName());
 
     /**
@@ -61,7 +61,7 @@ public class MainPage extends javax.swing.JFrame {
 
         navbar.setMaximumSize(new java.awt.Dimension(32767, 30));
         navbar.setPreferredSize(new java.awt.Dimension(400, 50));
-        navbar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        navbar.setLayout(new java.awt.FlowLayout(0));
 
         profileButton.setText("Profile");
         profileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -98,12 +98,12 @@ public class MainPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
-        LoginPage login_screen = new LoginPage(this);
+        LoginDialog login_screen = new LoginDialog(this);
         login_screen.setVisible(true);
     }//GEN-LAST:event_profileButtonActionPerformed
 
     private void manageAnimesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageAnimesButtonActionPerformed
-        ManageAnimesPage manage_screen = new ManageAnimesPage(this);
+        ManageAnimesDialog manage_screen = new ManageAnimesDialog(this);
         manage_screen.setVisible(true);
     }//GEN-LAST:event_manageAnimesButtonActionPerformed
 
@@ -112,6 +112,8 @@ public class MainPage extends javax.swing.JFrame {
     }//GEN-LAST:event_myListsButtonActionPerformed
 
     public void lookIntoAnime(Anime anime) {
+        this.anime_detail_page = new AnimeDetailPage(this, anime);
+        this.anime_detail_page.setVisible(true);
         System.out.println("Oi eu cliquei no anime: " + anime.getId());
     }
     

@@ -13,16 +13,16 @@ import model.Anime;
  *
  * @author andre
  */
-public class ManageAnimesPage extends javax.swing.JFrame {
+public class ManageAnimesDialog extends javax.swing.JFrame {
     protected int selected_id;
     protected MainPage main_screen;
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManageAnimesPage.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManageAnimesDialog.class.getName());
 
     /**
      * Creates new form ManageAnimes
      * @param main_screen
      */
-    public ManageAnimesPage(MainPage main_screen) {
+    public ManageAnimesDialog(MainPage main_screen) {
         initComponents();
         this.main_screen = main_screen;
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -182,6 +182,7 @@ public class ManageAnimesPage extends javax.swing.JFrame {
         }
         
         this.updateTable();
+        this.main_screen.updateAnimeList();
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed

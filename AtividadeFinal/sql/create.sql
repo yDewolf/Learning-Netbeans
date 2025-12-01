@@ -29,7 +29,7 @@ CREATE TABLE Anime_Tags (
 CREATE TABLE Anime_Ratings (
     user_id INT UNIQUE,
     anime_id INT NOT NULL,
-    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 10),
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL,
     FOREIGN KEY (anime_id) REFERENCES Animes(id) ON DELETE CASCADE
 );

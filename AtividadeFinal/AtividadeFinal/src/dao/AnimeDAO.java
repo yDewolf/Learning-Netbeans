@@ -69,6 +69,31 @@ public class AnimeDAO {
         return animes;
     }
     
+    public Anime getAnime(int id) {
+        Anime anime = null;
+        try {
+            Connection con = ConnectionFactory.getConnection();
+            String sql =  "SELECT * FROM Animes WHERE id = ?";
+            PreparedStatement stmt = con.prepareStatement(
+                sql
+            );
+            
+            stmt.setInt(1, id);
+            ResultSet result = ConnectionFactory.execute_fetch_statement(con, stmt);
+            while (result.next()) {
+                anime = new Anime(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("description")
+                );
+            }
+            ConnectionFactory.closeConnection(con, stmt, result);
+        } catch (SQLException ex) {
+            System.getLogger(AnimeDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        return anime;
+    }
+    
     public void delete(Anime anime) {
         try {
             Connection con = ConnectionFactory.getConnection();

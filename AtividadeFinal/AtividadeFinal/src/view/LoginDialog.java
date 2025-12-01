@@ -11,16 +11,16 @@ import model.User;
  *
  * @author andre
  */
-public class LoginPage extends javax.swing.JFrame {
+public class LoginDialog extends javax.swing.JFrame {
     public User loggedUser;
     protected MainPage mainScreen;
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginPage.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginDialog.class.getName());
 
     /**
      * Creates new form TelaLogin
      * @param mainScreen
      */
-    public LoginPage(MainPage mainScreen) {
+    public LoginDialog(MainPage mainScreen) {
         this.mainScreen = mainScreen;
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -98,6 +98,11 @@ public class LoginPage extends javax.swing.JFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         UserDAO dao = new UserDAO();
         User target_user = dao.get_user(usernameField.getText());
+        if (target_user == null) {
+            avisoLabel.setVisible(true);
+            avisoLabel.setText("Usuário não encontrado");
+            return;
+        }
         if (!this.passwordField.getText().equals(target_user.getPassword())) {
             System.out.println("Senha errada");
             avisoLabel.setVisible(true);
