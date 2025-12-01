@@ -45,7 +45,7 @@ public class AnimeDAO {
 
     // TODO: List by tags 
     public List<Anime> list() {
-        List<Anime> animes = new ArrayList();
+        List<Anime> animes = new ArrayList<Anime>();
         try {
             Connection con = ConnectionFactory.getConnection();
             String sql =  "SELECT * FROM Animes";

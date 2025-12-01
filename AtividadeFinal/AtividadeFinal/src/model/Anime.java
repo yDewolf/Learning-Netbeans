@@ -5,6 +5,9 @@ public class Anime {
     protected String name;
     protected String description;
 
+    protected int position = -1;
+    protected int rating;
+
     public Anime(int id, String name, String description) {
         this.id = id;
         this.name = name;
@@ -33,5 +36,21 @@ public class Anime {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

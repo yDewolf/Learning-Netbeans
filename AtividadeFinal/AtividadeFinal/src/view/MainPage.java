@@ -51,6 +51,9 @@ public class MainPage extends javax.swing.JFrame {
         profileButton = new javax.swing.JButton();
         myListsButton = new javax.swing.JButton();
         manageAnimesButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        refreshButton = new javax.swing.JButton();
         animeScroll = new javax.swing.JScrollPane();
         animeList = new javax.swing.JPanel();
 
@@ -61,7 +64,7 @@ public class MainPage extends javax.swing.JFrame {
 
         navbar.setMaximumSize(new java.awt.Dimension(32767, 30));
         navbar.setPreferredSize(new java.awt.Dimension(400, 50));
-        navbar.setLayout(new java.awt.FlowLayout(0));
+        navbar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         profileButton.setText("Profile");
         profileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -89,6 +92,23 @@ public class MainPage extends javax.swing.JFrame {
 
         getContentPane().add(navbar);
 
+        jPanel1.setMaximumSize(new java.awt.Dimension(32767, 30));
+
+        jLabel1.setText("Animes Disponíveis:");
+        jPanel1.add(jLabel1);
+
+        refreshButton.setText("Refresh");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(refreshButton);
+
+        getContentPane().add(jPanel1);
+
+        animeScroll.setFocusable(false);
+
         animeList.setLayout(new javax.swing.BoxLayout(animeList, javax.swing.BoxLayout.Y_AXIS));
         animeScroll.setViewportView(animeList);
 
@@ -108,8 +128,15 @@ public class MainPage extends javax.swing.JFrame {
     }//GEN-LAST:event_manageAnimesButtonActionPerformed
 
     private void myListsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myListsButtonActionPerformed
-        // TODO add your handling code here:
+        MyListsPage lists_page = new MyListsPage(this, this.loggedUser);
+        lists_page.setVisible(true);
     }//GEN-LAST:event_myListsButtonActionPerformed
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        if (this.loggedUser != null) {
+            updateAnimeList();
+        }
+    }//GEN-LAST:event_refreshButtonActionPerformed
 
     public void lookIntoAnime(Anime anime) {
         this.anime_detail_page = new AnimeDetailPage(this, anime);
@@ -145,6 +172,7 @@ public class MainPage extends javax.swing.JFrame {
             anime_info_holder.add(button_holder);
             this.animeList.add(anime_info_holder);
         }
+        this.pack();
     }
     
     public void updateTabs() {
@@ -172,9 +200,12 @@ public class MainPage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel animeList;
     private javax.swing.JScrollPane animeScroll;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton manageAnimesButton;
     private javax.swing.JButton myListsButton;
     private javax.swing.JPanel navbar;
     private javax.swing.JButton profileButton;
+    private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }

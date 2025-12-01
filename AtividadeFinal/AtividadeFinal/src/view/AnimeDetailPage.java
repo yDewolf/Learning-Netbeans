@@ -5,6 +5,7 @@
 package view;
 
 import dao.AnimeDAO;
+import dao.AnimeListDAO;
 import dao.AnimeRatingDAO;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import model.Anime;
+import model.AnimeList;
+import model.User;
 
 /**
  *
@@ -25,15 +28,22 @@ public class AnimeDetailPage extends javax.swing.JFrame {
     protected MainPage main_page;
     protected List<JButton> rating_buttons = new ArrayList<JButton>();
     protected Boolean already_rated = false;
+    
+    protected User user;
+    protected List<AnimeList> anime_lists;
 
     public AnimeDetailPage(MainPage main, Anime source_anime) {
         this.main_page = main;
+        this.user = this.main_page.loggedUser;
         this.source_anime = source_anime;
         this.already_rated = false;
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.avisoLabel.setVisible(false);
         this.updateElements(this.source_anime);
         this.addRatingButtons();
+        this.updateAvailableLists();
+        this.updateAddButtonEnabled();
     }
     
     protected void addRatingButtons() {
@@ -83,6 +93,16 @@ public class AnimeDetailPage extends javax.swing.JFrame {
         }
         this.pack();
     }
+    
+    protected void updateAvailableLists() {
+        this.listComboBox.removeAllItems();
+        AnimeListDAO dao = new AnimeListDAO();
+        List<AnimeList> lists = dao.get_user_lists(this.user);
+        for (AnimeList list : lists) {
+            this.listComboBox.addItem(list.getName());
+        }
+        this.anime_lists = lists;
+    }
         
     /**
      * This method is called from within the constructor to initialize the form.
@@ -107,6 +127,8 @@ public class AnimeDetailPage extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         listComboBox = new javax.swing.JComboBox<>();
         addToListButton = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        avisoLabel = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         animeDescriptionScroll = new javax.swing.JScrollPane();
@@ -158,15 +180,32 @@ public class AnimeDetailPage extends javax.swing.JFrame {
         jPanel2.add(avgRating);
 
         listComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lista 1", "Lista 2" }));
+        listComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                listComboBoxItemStateChanged(evt);
+            }
+        });
         jPanel3.add(listComboBox);
 
         addToListButton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         addToListButton.setText("+");
+        addToListButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addToListButtonActionPerformed(evt);
+            }
+        });
         jPanel3.add(addToListButton);
 
         jPanel2.add(jPanel3);
 
         getContentPane().add(jPanel2);
+
+        jPanel5.setMaximumSize(new java.awt.Dimension(32767, 30));
+
+        avisoLabel.setText("Aviso:");
+        jPanel5.add(avisoLabel);
+
+        getContentPane().add(jPanel5);
 
         jPanel4.setMaximumSize(new java.awt.Dimension(32767, 30));
 
@@ -191,6 +230,48 @@ public class AnimeDetailPage extends javax.swing.JFrame {
         this.source_anime = updated_anime;
         this.updateElements(source_anime);
     }//GEN-LAST:event_refreshButtonActionPerformed
+
+    private void addToListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToListButtonActionPerformed
+        AnimeListDAO dao = new AnimeListDAO();
+        AnimeList list = this.anime_lists.get(this.listComboBox.getSelectedIndex());
+        if (list == null) {
+            return;
+        }
+        
+        if (dao.is_anime_in_list(list, source_anime)) {
+            this.addToListButton.setEnabled(false);
+            return;
+        }
+        
+        dao.add_anime_to_list(list, source_anime, -1);
+        this.addToListButton.setEnabled(false);
+    }//GEN-LAST:event_addToListButtonActionPerformed
+
+    private void listComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_listComboBoxItemStateChanged
+        updateAddButtonEnabled();
+    }//GEN-LAST:event_listComboBoxItemStateChanged
+    
+    protected void updateAddButtonEnabled() {
+        if (this.anime_lists == null) {
+            return;
+        }
+        AnimeListDAO dao = new AnimeListDAO();
+        if (this.anime_lists.isEmpty()) {
+            return;
+        }
+        AnimeList list = this.anime_lists.get(this.listComboBox.getSelectedIndex());
+        if (list == null) {
+            this.addToListButton.setEnabled(false);
+            return;
+        }
+        
+        if (dao.is_anime_in_list(list, source_anime)) {
+            this.addToListButton.setEnabled(false);
+            return;
+        }
+        
+        this.addToListButton.setEnabled(true);
+    }
     
     public void updateElements(Anime anime) {
         this.animeName.setText(anime.getName());
@@ -209,11 +290,13 @@ public class AnimeDetailPage extends javax.swing.JFrame {
     private javax.swing.JButton animeSRating3;
     private javax.swing.JButton animeSRating4;
     private javax.swing.JLabel avgRating;
+    private javax.swing.JLabel avisoLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JComboBox<String> listComboBox;
     private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables

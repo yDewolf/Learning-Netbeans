@@ -66,7 +66,7 @@ public class AnimeRatingDAO {
         return -1;
     }
 
-    public float get_average_anime_rating(Anime anime) {
+    public double get_average_anime_rating(Anime anime) {
         try {
             Connection con = ConnectionFactory.getConnection();
             String sql =  "SELECT AVG(rating) FROM Anime_Ratings WHERE anime_id = ?";
@@ -78,7 +78,7 @@ public class AnimeRatingDAO {
 
             ResultSet result = ConnectionFactory.execute_fetch_statement(con, stmt);
             while (result.next()) {
-                return result.getFloat("AVG(rating)");
+                return result.getDouble("AVG(rating)");
             }
             ConnectionFactory.closeConnection(con, stmt, result);
         } catch (SQLException ex) {
